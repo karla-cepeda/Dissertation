@@ -1,0 +1,45 @@
+digraph Couriers {
+labelloc="t";
+label="SENTIMENT ANALYSIS ON COVID-19 VACCINES - TWEETS\n\n";
+fontname = "Bitstream Vera Sans"
+fontsize = 12
+node [
+fontname = "Bitstream Vera Sans"
+fontsize = 8
+shape = "record"]
+edge [
+arrowtail = "none"
+arrowhead = "none"
+fontsize = 7]
+
+TWEET[
+label = "{tweet|id: int [fk]\l tweet_id: text [uq]\l original_text: text\l cleaned_text: text\l token_text: text\l author_id: text [fk]\l conversation_id: text\l lang: text\l created_at: datetime\l place_id: text [fk]\l original_folder: text\l key_name: text\l}",
+style=filled,
+fillcolor=gray95]
+
+TWEET_HASHTAG[label = "{tweet_hashtag|tweet_id: int [pk]\l hashtag_id: int [pk]\l}"]
+
+HASHTAG[label = "{hashtag|id: int [pk]\l name: text\l}"]
+
+REFERENCED_TWEET[
+label = "{referenced_tweet|tweet_id: int [pk]\l referenced_id: int [pk]\l type: text\l}"]
+
+PLACE[
+label = "{place| place_id: int [pk]\l name: text\l country: text \l}"]
+
+USER[
+label = "{user| author_id: int [pk]\l username: text \l name: text\l verified: bool\l created_at: datetime\l}"]
+
+
+edge[headlabel = "0..*"
+taillabel = "0..*"]
+TWEET -> TWEET_HASHTAG
+HASHTAG -> TWEET_HASHTAG
+edge[ headlabel = "1..*"
+taillabel = "0..*"]
+edge [headlabel = "1..1"
+taillabel = "1..1"]
+TWEET -> PLACE
+TWEET -> USER
+TWEET -> REFERENCED_TWEET
+}
