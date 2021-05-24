@@ -24,9 +24,6 @@ import os
 # nltk.download('wordnet')
 # nltk.download('stopwords')
 
-# ------------------------------------------
-# SQL INFORMATION
-# ------------------------------------------
 
 def process_yaml(key_name):
     
@@ -91,10 +88,17 @@ def remove_accents(tweet):
     
     # https://stackoverflow.com/questions/37978225/replace-some-accented-letters-from-word-in-python
     accented = {'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a',
-            'é': 'e', 'ê': 'e',
-            'í': 'i',
-            'ó': 'o', 'ô': 'o', 'õ': 'o',
-            'ú': 'u', 'ü': 'u'}
+                'é': 'e', 'ê': 'e',
+                'í': 'i',
+                'ó': 'o', 'ô': 'o', 'õ': 'o',
+                'ú': 'u', 'ü': 'u',
+                
+                'À': 'A', 'Á': 'A', 'Â': 'A', 'Ã': 'A',
+                'É': 'E', 'Ê': 'E',
+                'Í': 'I',
+                'Ó': 'O', 'Ô': 'O', 'Õ': 'O',
+                'Ú': 'U', 'Ü': 'U'
+                }
 
     new_tweet = ''.join([accented[t] if t in accented else t for t in tweet])
     
@@ -225,7 +229,9 @@ def insert_tweet(data, key_names, folder):
                                                             refered_type,
                                                             )
                                 )
-                        
+                    
+                    
+                    
                     # Insert hashtags
                     if len(hashtags) > 0:
                         for h in hashtags:
