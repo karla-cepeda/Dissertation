@@ -1,0 +1,7 @@
+# Generated files
+dataset_inicial/*
+app_dashboard/layer_configurations/config.yaml
+code/layer_configurations/config.yaml
+
+.vscode/*
+__pycache__/*
