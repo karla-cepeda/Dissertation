@@ -1,0 +1,12 @@
+
+# Stored procedures segmented by database
+stored_procedures_hostgator:
+    sentimentanalysis:
+        insert_date: insert_date
+        insert_reference: insert_reference
+        insert_date_reference: insert_date_reference
+        insert_tweet: insert_tweet
+        insert_tweet_date: insert_tweet_date
+        get_tweets: get_tweets
+        get_dates: get_dates
+        get_date_reference: get_date_reference

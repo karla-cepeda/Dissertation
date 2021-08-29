@@ -1,0 +1,59 @@
+# Inicial configuration for collection
+# This default values could be changed in batch section (below)
+collection_config:
+    deafult_start_date: '2021,8,6'
+    collect_conversations: False
+    query_config: -is:nullcast
+    expansions:  "referenced_tweets.id,author_id&tweet.fields=attachments,author_id,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld&user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld"
+
+# Dictionary of keywords for batch config (see next block below)
+# Each keywords are classified by group, and follow the pattern: group_name:[list of keywords associeted to this group]
+keywords:    
+    vaccine: ['vaccine', 'vaccines', 'vaccinated', 'vaccinate', 'vaccination', 'vaccinations', 'rollout', '"roll-out"', 'roll out', 'doses', 'dose', 'injected', 'injection', 'injections', 'jab', 'jabs',  '#vaccine', '#vaccines', '#vaccinated', "#covidvaccines", "#covidvaccine", '#covid19vaccine', '#vaccination', '#vaccineswork', '#oxfordvaccine', '#coronavaccine', '#covidvaccinerace']
+    cvaccine: ['pfizer', 'moderna', 'oxford', 'astrazeneca', 'biontech', '"mrna-1273"', 'bnt162b2', 'bnt162', 'AZD1222', 'johnson', '"johnson & johnson"', 'vaxzevria', 'comirnaty', 'janssen', '"j&j"', '#astrazeneca', '#oxfordastrazeneca', '#astrazenecavaccine', '#pfizer', '#pfizervaccine', '#modernavaccine', '#moderna', '#johnsonandjohnson', 'sputnik', '"Gam-COVID-Vac"', 'coronavac', 'sinovac', 'novavax', '"NVX-CoV2373"', 'covaxin']
+    covid: ['covid', 'corona', 'coronavirus', 'covid19', '"covid-19"', 'virus', '"sars-cov-2"', '"sars cov 2"', 'sarscov', 'pandemic', '#covid19', '#covid', '#zerocovid', "#covid19ireland", "#covid_19", "#pandemic", '#covidireland']
+    # Place - ireland
+    place: ['#ireland', '#dublin', '#galway', '#cork', 'place:dublin', 'place:cork', 'place:galway', 'place_country:ie']
+    # Users - different types
+    media: ['rte', 'RTE_PrimeTime', 'drivetimerte', 'RTERadio1', 'Independent_ie', 'NewstalkFMOR', 'IrishSunOnline', 'IrishTimes', 'IrishTimesNews', 'thejournal_ie', 'irishexaminer', 'IsFearrAnStar']
+    political_parties: ['sinnfeinireland', 'fiannafailparty', 'greenparty_ie', 'nationalpartyie', 'finegael', 'labour', 'socdems']
+    gov_public_figures: ['MichealMartinTD', 'LeoVaradkar', 'PresidentIRL']
+    gov_departments: ['hselive', 'hpscireland', 'roinnslainte', 'cmoireland', 'deptenterprise', 'citizensinfo', 'welfare_ie', 'csoireland', 'merrionstreet']
+    health_public_figures: ['paulreiddublin', 'ronan_glynn', 'samuelmcconkey1', 'donnellystephen']
+    
+# Configuration to build query for tweet gathering process
+# Each batch group different keywords according by the name of the group.
+# This follows the pattern: batch_name:[list of keywords group_name and extra configurations]
+# The extra configurations allow for each batch must be different a keywords, such as is:retweet operator
+# Specific start date could be specified as well with the patter: {'date':'year,month,day'}
+# If it is required to collect conversations from tweets collect from that batch and request, include: {'conversation':True}
+# JUST FOR USERNAMES: make sure to indicate if from usernames it is needed to gather tweets posted by the user ("from") or 
+#   tweet to this user ("to") as follows: {'to':group_name(USERNAME)} and {'from':group_name(USERNAME)}
+config_batches:
+    covid_vaccine: ['vaccine', 'covid', 'place', {'expansions': 'referenced_tweets.id,author_id,geo.place_id&tweet.fields=attachments,author_id,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld&user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld&place.fields=id,name,country'}, {'extra_config': -is:retweet}]
+    covid_vaccine_c: ['cvaccine', 'covid', 'place', {'expansions': 'referenced_tweets.id,author_id,geo.place_id&tweet.fields=attachments,author_id,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld&user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld&place.fields=id,name,country'}, {'extra_config': -is:retweet}]
+    from_media: ['vaccine', 'covid', {'from:':'media'}, {'conversation':True}]
+    from_media_c: ['cvaccine', 'covid', {'from:':'media'}, {'conversation':True}]
+    to_media: ['vaccine', 'covid', {'to:':'media'}, {'extra_config': -is:retweet}]
+    to_media_c: ['cvaccine', 'covid', {'to:':'media'}, {'extra_config': -is:retweet}]
+    from_politicalp: ['vaccine', 'covid', {'from:':'political_parties'}, {'conversation':True}]
+    from_politicalp_c: ['cvaccine', 'covid', {'from:':'political_parties'}, {'conversation':True}]
+    to_politicalp: ['vaccine', 'covid', {'to:':'political_parties'}, {'extra_config': -is:retweet}]
+    to_politicalp_c: ['cvaccine', 'covid', {'to:':'political_parties'}, {'extra_config': -is:retweet}]
+    from_gov_public_figures: ['vaccine', 'covid', {'from:':'gov_public_figures'}, {'conversation':True}]
+    from_gov_public_figures_c: ['cvaccine', 'covid', {'from:':'gov_public_figures'}, {'conversation':True}]
+    to_gov_public_figures: ['vaccine', 'covid', {'to:':'gov_public_figures'}, {'extra_config': -is:retweet}]
+    to_gov_public_figures_c: ['cvaccine', 'covid', {'to:':'gov_public_figures'}, {'extra_config': -is:retweet}]
+    from_gov: ['vaccine', 'covid', {'from:':'gov_departments'}, {'conversation':True}]
+    from_gov_c: ['cvaccine', 'covid', {'from:':'gov_departments'}, {'conversation':True}]
+    to_gov: ['vaccine', 'covid', {'to:':'gov_departments'}, {'extra_config': -is:retweet}]
+    to_gov_c: ['cvaccine', 'covid', {'to:':'gov_departments'}, {'extra_config': -is:retweet}]
+    from_health: ['vaccine', 'covid', {'from:':'health_public_figures'}, {'conversation':True}]
+    from_health_c: ['cvaccine', 'covid', {'from:':'health_public_figures'}, {'conversation':True}]
+    to_health: ['vaccine', 'covid', {'to:':'health_public_figures'}, {'extra_config': -is:retweet}]
+    to_health_c: ['cvaccine', 'covid', {'to:':'health_public_figures'}, {'extra_config': -is:retweet}]
+    #covid_vaccine_global: ['vaccine', 'covid', {'-': 'place'}] # This batch was used just for training the SVM model
+ 
+repositories:
+    main: ..\dataset
+    daily: ..\dataset\daily_process
