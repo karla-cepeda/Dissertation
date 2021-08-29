@@ -13,13 +13,9 @@ arrowhead = "none"
 fontsize = 7]
 
 TWEET[
-label = "{tweet|id: int [fk]\l tweet_id: text [uq]\l original_text: text\l cleaned_text: text\l token_text: text\l author_id: text [fk]\l conversation_id: text\l lang: text\l created_at: datetime\l place_id: text [fk]\l original_folder: text\l key_name: text\l}",
+label = "{tweet|tweet_id: text [pk]\l original_text: text\l cleaned_text: text\l normalized_text: text\l author_id: text [fk]\l conversation_id: text\l lang: text\l created_at: datetime\l place_id: text [fk]\l batch_name: text\l key_name: text\lkeywords: text\lkeywords_pharma: text\llabel_id: text\llabel: text\lactive: bool\l}",
 style=filled,
 fillcolor=gray95]
-
-TWEET_HASHTAG[label = "{tweet_hashtag|tweet_id: int [pk]\l hashtag_id: int [pk]\l}"]
-
-HASHTAG[label = "{hashtag|id: int [pk]\l name: text\l}"]
 
 REFERENCED_TWEET[
 label = "{referenced_tweet|tweet_id: int [pk]\l referenced_id: int [pk]\l type: text\l}"]
@@ -30,11 +26,12 @@ label = "{place| place_id: int [pk]\l name: text\l country: text \l}"]
 USER[
 label = "{user| author_id: int [pk]\l username: text \l name: text\l verified: bool\l created_at: datetime\l}"]
 
+LOG_FILE[
+label = "{log_file| id: int [pk]\l path: text \l filename: text\l extention: text\l total_tweets: int\l created_at: datetime\lpreprocessed: bool\lpreprocessed_at: datetime\l}"]
+
 
 edge[headlabel = "0..*"
 taillabel = "0..*"]
-TWEET -> TWEET_HASHTAG
-HASHTAG -> TWEET_HASHTAG
 edge[ headlabel = "1..*"
 taillabel = "0..*"]
 edge [headlabel = "1..1"
