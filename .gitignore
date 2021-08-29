@@ -1,9 +1,14 @@
 # Generated files
-dataset_inicial/*
-app_dashboard/layer_configurations/config.yaml
+
+Dataset/*
+Dashboard/layer_configurations/config.yaml
+Dashboard/__pycache__/
+
 Code/layer_configurations/config.yaml
 
 Code/.vscode/*
 Code/layer_classes/__pycache__/*
 Code/layer_data_access/__pycache__/*
 Code/layer_logic/__pycache__/*
+
+*.bat
