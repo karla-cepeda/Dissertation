@@ -20,6 +20,9 @@ import preprocessor as p
 
 import os
 
+from bs4 import BeautifulSoup
+from html import unescape
+
 # nltk.download
 # nltk.download('wordnet')
 # nltk.download('stopwords')
@@ -106,7 +109,7 @@ def remove_accents(tweet):
 
 
 def preprocess_data(tweet):
-
+    
     # Expanding contractions
     tweet = contractions.fix(tweet)
     
@@ -119,14 +122,29 @@ def preprocess_data(tweet):
     # text-cleaning: URLs, Mentions, emojis.
     tweet = p.clean(tweet)
 
+    # Remove spaces
+    tweet = tweet.strip()
+    
+    # Remove double spaces
+    tweet = tweet.replace('  ', ' ')
+    
+    # Remove special html characters
+    tweet = BeautifulSoup(unescape(tweet), 'lxml').text
+    
+    # Save cleaned_tweet
+    cleaned_tweet = tweet
+    
     # Remove Digits except covid-19
-    tweet = re.sub(r"(?:((C|c)(O|o)(V|v)(I|i)(D|d).?19)|\d+)(?=\D|$)", r"\1", tweet)
+    tweet = re.sub(r"(?:((C|c)(O|o)(V|v)(I|i)(D|d).?19)|\d+[A-Za-z]*)(?=\D|$)", r"\1", tweet)
     
     # Replace covid variant words with covid19
-    tweet = re.sub(r"((C|c)(O|o)(V|v)(I|i)(D|d).?19)", r"covid", tweet)
+    tweet = re.sub(r"((C|c)(O|o)(V|v)(I|i)(D|d).?19)", r"covid-19", tweet)
     
     # Lower strings
     tweet = tweet.lower()
+    
+    # Possesion remplacement
+    tweet = tweet.replace("'s", "")
     
     # Remove Punctuations
     # https://www.analyticsvidhya.com/blog/2018/07/hands-on-sentiment-analysis-dataset-python/
@@ -134,26 +152,21 @@ def preprocess_data(tweet):
     tweet = re.sub(r'[^a-zA-Z#]', ' ', (tweet))
     
     # Removing all special characters
-    #tweet = re.sub(r'[^\w\s]', ' ', (tweet))
-    
-    # Remove spaces
-    tweet = tweet.strip()
-    
-    # Remove double spaces
-    tweet = tweet.replace('  ', ' ')
+    tweet = re.sub(r'[^\w\s]', ' ', (tweet))
     
     # Lemmatization + Tokenization 
     # https://towardsdatascience.com/basic-tweet-preprocessing-in-python-efd8360d529e
-    lemmatizer = nltk.stem.WordNetLemmatizer()
+    #lemmatizer = nltk.stem.WordNetLemmatizer()
     w_token = TweetTokenizer()
-    token_tweet = [lemmatizer.lemmatize(w) for w in w_token.tokenize(tweet)]    
+    #token_tweet = [lemmatizer.lemmatize(w) for w in w_token.tokenize(tweet)]    
+    token_tweet = [w for w in w_token.tokenize(tweet)]    
     
     # Removing stop words
     #words = set(nltk.corpus.words.words())
-    stop_words = set(stopwords.words('english'))
-    token_tweet = [i for i in token_tweet if i not in stop_words]
+    #stop_words = set(stopwords.words('english'))
+    #token_tweet = [i for i in token_tweet if i not in stop_words]
         
-    return tweet, token_tweet
+    return cleaned_tweet, token_tweet
     
 
 def insert_tweet(data, key_names, folder):
@@ -182,6 +195,11 @@ def insert_tweet(data, key_names, folder):
             lang = tweet['lang']
             created_at = tweet['created_at'].replace('T', ' ').replace('Z', '')
             
+            if "in_reply_to_user_id" in tweet.keys():
+                in_reply_to_user_id = tweet['in_reply_to_user_id']
+            else:
+                in_reply_to_user_id = None
+            
             if "geo" in tweet.keys():
                 if "place_id" in tweet['geo']:
                     place_id = tweet['geo']['place_id']
@@ -199,9 +217,9 @@ def insert_tweet(data, key_names, folder):
             
             
             results = call_sp('lookup_tweet', (str(tweet_id),
-                                               str(text_original),
-                                               text_cleaned,
-                                               ', '.join(text_token),
+                                               #str(text_original),
+                                               #text_cleaned,
+                                               #', '.join(text_token),
                                                )
                               )
             
@@ -214,6 +232,7 @@ def insert_tweet(data, key_names, folder):
                                              ', '.join(text_token),
                                              str(author_id),
                                              str(conversation_id),
+                                             in_reply_to_user_id,
                                              str(lang),
                                              str(created_at),
                                              place_id,

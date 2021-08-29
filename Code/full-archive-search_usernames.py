@@ -8,11 +8,11 @@ from datetime import date, timedelta
 import time
 import json
 
-os.chdir(r'E:\Karla\IRELAND v2\DKIT\2nd Semester\Dissertation\Code\search_tweets')
+os.chdir(r'E:\Karla\IRELAND v2\DKIT\2nd Semester\Dissertation')
 
 def create_twitter_url(start_date, end_date):
 
-    #username = '(to:rte OR to:RTE_PrimeTime OR to:drivetimerte OR to:RTERadio1 OR to:Independent_ie OR to:NewstalkFMOR OR to:IrishSunOnline OR to:IrishTimes OR to:IrishTimesNews OR to:thejournal_ie OR to:irishexaminer OR to:IsFearrAnStar)' 
+    username = '(from:rte OR from:RTE_PrimeTime OR from:drivetimerte OR from:RTERadio1 OR from:Independent_ie OR from:NewstalkFMOR OR from:IrishSunOnline OR from:IrishTimes OR from:IrishTimesNews OR from:thejournal_ie OR from:irishexaminer OR from:IsFearrAnStar)' 
     #username = '(to:sinnfeinireland OR to:fiannafailparty OR to:greenparty_ie OR to:NationalPartyIE OR to:FineGael OR to:labour OR to:SocDems)'
     #username = '(to:HSELive OR to:roinnslainte OR to:CMOIreland OR to:paulreiddublin Or to:ronan_glynn Or to:DonnellyStephen)'
     words = '(vaccine OR vaccines OR vaccinated OR vaccination OR dose OR injection OR pfizer OR moderna OR NIAID OR astra OR astrazeneca OR oxford OR BioNTech OR "mRNA-1273" OR "johnson & johnson" OR "j&j" OR #vaccine OR #vaccines OR #vaccinated OR #AstraZeneca OR #pfizer OR #Moderna) (covid OR corona OR coronavirus OR covid19 OR "covid-19" OR virus OR "sars-cov-2" OR "sars cov 2" OR nCoV OR #covid19 OR #covid)'
@@ -29,15 +29,13 @@ def create_twitter_url(start_date, end_date):
     
     url = "https://api.twitter.com/2/tweets/search/all?query={}&{}&{}&{}&{}".format(urllib.parse.quote(q), mrf, start_date, end_date, expansions)
     
+    print(q)
+    input()
+    
     return url
 
-
-def process_yaml():
-    with open("config.yaml") as file:
-        return yaml.safe_load(file)
-
-def create_bearer_token(data):
-    return data["search_tweets_api"]["bearer_token"]
+def create_bearer_token():
+    return 'AAAAAAAAAAAAAAAAAAAAAADOOQEAAAAAA48TXRx7xRlgojG3H2jWqwo5Hx8%3DaTenugiMmFNjlhX1nS8a1wxoPkg22bAWwHaYHrFQ07mJcoITQQ'
 
 def twitter_auth_and_connect(bearer_token, url):
     headers = {"Authorization": "Bearer {}".format(bearer_token)}
@@ -72,10 +70,9 @@ def main():
     
     total_tweets = 0
     
-    data = process_yaml()
-    bearer_token = create_bearer_token(data)
+    bearer_token = create_bearer_token()
     
-    start_date = date(2020,1,1)
+    start_date = date(2020,1,23)
     end_date = start_date + timedelta(days=1)
     
     last_date = date.today()
@@ -105,6 +102,7 @@ def main():
         start_date += timedelta(days=1)
         end_date = start_date + timedelta(days=1)   
         
+        input()
         
     
     print("Total Tweets:", total_tweets)
