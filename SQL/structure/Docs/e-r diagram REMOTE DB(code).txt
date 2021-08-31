@@ -1,0 +1,40 @@
+digraph Couriers {
+labelloc="t";
+label="SENTIMENT ANALYSIS ON COVID-19 VACCINES - TWEETS\n\n";
+fontname = "Bitstream Vera Sans"
+fontsize = 12
+node [
+fontname = "Bitstream Vera Sans"
+fontsize = 8
+shape = "record"]
+edge [
+arrowtail = "none"
+arrowhead = "none"
+fontsize = 7]
+
+TWEET[
+label = "{tweet|tweet_id: text [pk]\l created_at: datetime \l label_id: int \l label: text \l conversation_id: text \l batch_name: text\l keywords: text\lkeywords_pharma: text \l active: bool\l}",
+style=filled,
+fillcolor=gray95]
+
+DATE[
+label = "{date|id: int [pk]\l date: datetime \l description: text\l is_covid_vaccine: bool \l}",
+style=filled,
+fillcolor=gray95]
+
+TWEET_DATE[label = "{tweet_date|tweet_id: int [pk]\l date_id: int [pk]\l}"]
+
+REFERENCE[label = "{reference|id: int [pk]\l description: text\l date: datetime\l url: text\l retrieved_date: datetime\l}"]
+
+DATE_REFERENCE[
+label = "{date_reference|date_id: int [pk]\l reference_id: int [pk] \l}"]
+
+edge[headlabel = "0..*"
+taillabel = "0..*"]
+TWEET -> TWEET_DATE
+TWEET_DATE -> DATE
+edge [headlabel = "1..1"
+taillabel = "1..1"]
+DATE -> DATE_REFERENCE
+REFERENCE -> DATE_REFERENCE
+}

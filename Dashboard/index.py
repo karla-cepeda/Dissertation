@@ -4,7 +4,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 
-#from app import server
+from app import server
 from app import app
 from apps import home, dashboard
 
@@ -64,5 +64,5 @@ def render_page_content(pathname):
 
 
 if __name__ == '__main__':
-    app.run_server(port=8060, debug=True)
-    #app.run_server(debug=False)
+    #app.run_server(port=8060, debug=True)
+    app.run_server(debug=False)
