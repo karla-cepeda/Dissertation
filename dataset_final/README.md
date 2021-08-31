@@ -13,7 +13,7 @@ created_at: date the tweet was posted.
 label: positive, negative or neutral opinion. This was labelled using SVM approach. For more information see report.
 
 
-#**NOTE**:
+# **NOTE**:
 Please note that by downloading the Twitter data you agree to abide
 by the Twitter terms of service (https://twitter.com/tos),
 and in particular you agree not to redistribute the data
