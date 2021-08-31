@@ -52,7 +52,7 @@ def render_page_content(pathname):
         
         content = html.Div(dashboard.layout, className = "col-md-9 ml-sm-auto col-lg-10 pt-3 px-4")        
         bodynavbar = html.Div(
-                            html.Div(dashboard.filters, className = "sidebar-sticky"), 
+                            html.Div(dashboard.filters, className = "sidebar-sticky", style={'padding-left':'10px'}), 
                             className = "col-md-2 d-none d-md-block bg-light sidebar")        
 
         return [[bodynavbar, content], "exact"]

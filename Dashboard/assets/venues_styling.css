@@ -487,3 +487,7 @@ table{
 nav ul a {
   color: white !important; 
 }
+
+input.DateInput_input{
+	font-size:12px;
+}

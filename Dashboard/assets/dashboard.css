@@ -92,3 +92,41 @@ body {
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 
+
+input.DateInput_input{
+	font-size:12px;
+	width:80px;
+}
+
+.DateInput{
+	width: 80px;
+	margin: 0 10px;
+}
+
+.CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover, .CalendarDay__selected_span:active, .CalendarDay__selected_span:hover {
+    background: #ff7e75;
+    border: 1px double #ff7e75;
+    color: #fff;
+}
+
+.CalendarDay__selected_span {
+    background: #d9534f;
+    border: 1px double #ff7e75;
+    color: #fff;
+}
+
+.DateRangePickerInput{
+	background-color: transparent;
+}
+
+.DateRangePickerInput__withBorder{
+	border:None;
+}
+
+#resetdates, #cleanfilters{
+	border: none;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    padding-left: 12px;
+}
