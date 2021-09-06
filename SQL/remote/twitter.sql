@@ -1,6 +1,5 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: mx74.hostgator.mx    Database: tanniest_sentimentanalysis
 -- ------------------------------------------------------
 -- Server version	5.7.23-23
 
