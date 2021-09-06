@@ -1,3 +1,4 @@
+# Collection and preprocess of tweets
 This folder contains all the code used for collection, cleaning and normalization of tweets. Additionally, insertion and upgrade process to database are included.
 
 To organize the code, a three-layer architecture has been used. This is a well-established software application architecture that organizes applications into three logical and physical computing tiers: 
@@ -12,6 +13,8 @@ Other folders:
 - **Extra**. This folder is not used during the collection and preprocess of tweets and dates. This folder contains support code for other types of processes such as extraction of slang dictionary and emoticon and emoji process to create dictionaries.
 
 This architecture was chosen to organize well the code.
+
+# Explorationa and Modelling
 
 Files that are not using this architecture, but access the data through the layer data_access, are:
 - analysis_process.ipybn
