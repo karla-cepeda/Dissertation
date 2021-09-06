@@ -7,6 +7,9 @@ Created on Thu Jun 24 16:02:26 2021
 @institute: Dundalk Institute of Technology
 @supervisor: Rajesh Jaswal
 
+This python scritp contains the process to scrap the website Wikipedia that contains 
+important dates and events related to covid in Ireland.
+
 """
 import pandas as pd
 import numpy as np
@@ -24,8 +27,12 @@ from layer_data_access import date_data
 
 class date_logic(object):
     def __init__(self):
-        # Preparing variables for environment
-        # Global variables
+        """
+        Costructor.
+        Preparing variables for environment
+        Global variables
+        
+        """
         print("Prepering global variables...")
         month_list = date_logic.__get_month_list()
         date_logic.__PATTERN_DATE_ = re.compile("\d{1,2}\s("+"|".join(month_list)+")\s?–?\s?")
@@ -34,27 +41,35 @@ class date_logic(object):
         date_logic.__PATTERN_REFERENCE_ = re.compile("\[\d{1,4}\]")
         del month_list
 
-    # Get list of months
     @staticmethod
     def __get_month_list():
+        # Get list of months
         month_list = []
         for i in range(1,13):
             month_list.append(datetime.date(2008, i, 1).strftime('%B'))        
         return month_list
 
-    # Check patterns sent
     @staticmethod
     def __is_date_pattern(text):       
+        # Check patterns sent
         return date_logic.__PATTERN_DATE_.match(text)
 
-    # Remove empty items from list
     @staticmethod
     def __remove_empty_item_list(lst):
+        # Remove empty items from list
         return list(filter(None, lst))
 
-    # Get urls from wikipedia for scrapping process
     @staticmethod
     def __get_url_main_list():
+        """
+        Get urls from wikipedia for scrapping process  
+
+        Returns
+        -------
+        href_lst : List
+            DESCRIPTION. List of all pages that contain dates and events from covid in Ireland.
+
+        """
         url = r'https://en.wikipedia.org/wiki/Timeline_of_the_COVID-19_pandemic_in_the_Republic_of_Ireland'
         r = requests.get(url)
         html_doc = r.text
@@ -68,17 +83,43 @@ class date_logic(object):
         
         return href_lst
 
-    # Capitalize first word of a sentence
     @staticmethod
     def __capitalize_first_word_sentence(text):
+        """
+        Capitalize first word of a sentence
+
+        Parameters
+        ----------
+        text : String
+            DESCRIPTION. Description of the event in a date.
+
+        Returns
+        -------
+        String
+            DESCRIPTION. Capitalize description.
+
+        """
         words = text.split()
         first_word = words[0].capitalize()
         rest_words = " ".join(words[1:])    
         return first_word + " " + rest_words
 
-    # Clean text removing date, references
     @staticmethod
     def __clean_text(text):
+        """
+        Clean text removing date, references
+
+        Parameters
+        ----------
+        text : String
+            DESCRIPTION. Description of the event in a date.
+
+        Returns
+        -------
+        text : string
+            DESCRIPTION. Cleaned description of the event.
+
+        """
         date_index = re.match(date_logic.__PATTERN_DATE_, text)
         if date_index:
             text = text[date_index.span()[1]:]
@@ -88,10 +129,24 @@ class date_logic(object):
         
         return text
 
-    # Check if text contains figures of new confirmed cases and deaths
-    # as this is no relevant information for the timeline
     @staticmethod
     def __is_case_death_text(text):
+        """
+        
+        Check if text contains figures of new confirmed cases and deaths
+         as this is no relevant information for the timeline
+
+        Parameters
+        ----------
+        text : String
+            DESCRIPTION. Description of the event in a date.
+
+        Returns
+        -------
+        bool
+            DESCRIPTION. Indicates if general text has been found
+
+        """
         examples = ["more case was confirmed bringing the total to",
                     "new cases were reported, bringing the total to",
                     "new cases were confirmed, bringing the total cases in the country to",
@@ -131,9 +186,24 @@ class date_logic(object):
 
         return False
 
-    # Get reference from date processed
     @staticmethod
     def __get_reference_info(soup, date):
+        """
+        Get reference from date processed  
+
+        Parameters
+        ----------
+        soup : beautiful soup object
+            DESCRIPTION. Contains all html structure of the url accessed
+        date : datetime
+            DESCRIPTION. Date in process.
+
+        Returns
+        -------
+        ref_list : TYPE
+            DESCRIPTION.
+
+        """
         ref_list = []
         for a in date.find_all("a"):
             href = a["href"].replace("#", "").strip()
@@ -179,10 +249,27 @@ class date_logic(object):
                     ref_list.append(ref_dic)
                     
         return ref_list
-
-    # Process to get cleaned description, and references
+    
     @staticmethod
     def __get_date_references(soup, date, date_txt):
+        """
+        Process to get cleaned description, and references        
+
+        Parameters
+        ----------
+        soup : beautiful soup object
+            DESCRIPTION. Contains all html structure of the url accessed
+        date : datetime
+            DESCRIPTION. Date in process.
+        date_txt : stirng
+            DESCRIPTION. Date in process, but in string format
+
+        Returns
+        -------
+        date_dict : dictionary
+            DESCRIPTION. date and list of references.
+
+        """
         ref_list = []
         date_dict = {}
         date_description_text = date_logic.__clean_text(date.text)
@@ -200,10 +287,17 @@ class date_logic(object):
         date_dict["references"] = ref_list
         
         return date_dict
-
-    # Get dates from wikipedia urls
+    
     @staticmethod
     def start_dates_process():
+        """
+        Get dates from wikipedia urls        
+
+        Returns
+        -------
+        None.
+
+        """
         # Start dates collection process
         print("Dates collection process has started...")    
         href_lst = date_logic.__get_url_main_list()
@@ -285,10 +379,22 @@ class date_logic(object):
 
         date_logic.__start_insert_db(dates_list) 
         print("Process has been complited.")
-
-    # Insert collection result into database
+    
     @staticmethod
     def __start_insert_db(dates_list):
+        """
+        Insert collection result into database
+
+        Parameters
+        ----------
+        dates_list : list
+            DESCRIPTION. List of dates and descriptions.
+
+        Returns
+        -------
+        None.
+
+        """
         # Start processing to database
         print("Saving to database...")
         print("Insertion process has started...")
