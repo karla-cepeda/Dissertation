@@ -32,19 +32,8 @@ image_filename = 'assets/green_arrow_long.svg'
 # Global variables
 my_color = ['rgba(225, 192, 39', 'rgba(206, 27, 40', 'rgba(12, 206, 73']
 
-"""
-slidertool = dcc.RangeSlider(
-                    id='sliderid',
-                    min=min_date,
-                    max=max_date,
-                    value=[min_date, max_date],
-                    step=1,
-                    marks=dictlist,
-                    allowCross=False,
-                )  
-"""
-
 def get_distribution_labels(tweets_df, date_df, cond, rule = 'D'):
+    
     if not cond is None:
         df = tweets_df[cond].copy()
     else:
@@ -441,8 +430,11 @@ def update_graphs(start_date, end_date, options, vaccines, n_clicks, cleanfilter
         name = lst_name[int(vaccines)]
         for v in vaccines_name[name]:
             cond1 = cond1 | (tweets_df.keywords_pharma.str.contains(v))
-            
-        cond = cond & cond1
+        
+        cond2 = tweets_df.tweet_id == tweets_df.conversation_id
+        cond3 = tweets_df.conversation_id.isin(tweets_df[cond1 & cond2].conversation_id.unique())
+        
+        cond = cond & cond3
         
     if len(tweets_df[cond]) == 0:
         return [{}, {}, True, "No data found!", 0, 0, start_date, end_date, options, vaccines, {}, basis]
