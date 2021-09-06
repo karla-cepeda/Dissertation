@@ -5,20 +5,36 @@
 @institute: Dundalk Institute of Technology
 @supervisor: Rajesh Jaswal
 
+Contains the process to migrate specific tweet data into a remote database that will 
+be used for a dashboard to show off the results.
+
 """
 from layer_data_access import tweet_data, date_data
 
 class date_migrate(object):
     def __init__(self):
-        date_migrate.__dated_local = date_data.date_data()
-        date_migrate.__dated_remote = date_data.date_data_remote()
+        """
+        Constructor.
+        
+        """
+        date_migrate.__dated_local = date_data.date_data() # Create access to local database
+        date_migrate.__dated_remote = date_data.date_data_remote() #  Create access to remote database
         
     def __del__(self):
+        # Delete access objects
         del date_migrate.__dated_local
         del date_migrate.__dated_remote
     
     @staticmethod
     def start_process():
+        """
+        Starts the migration process of date data.
+
+        Returns
+        -------
+        None.
+
+        """
         print("Start date migration to remote db.")
         df_dates = date_migrate.__dated_local.get_dates_for_migration()
         df_dates_references = date_migrate.__dated_local.get_date_reference_for_migration()
@@ -61,6 +77,15 @@ class tweet_migrate(object):
     
     @staticmethod
     def start_process():
+        """
+        Starts the migration process tweets data.
+        Not all information is copied, just tweet_id, label, created_at, batch_name and keywords.
+
+        Returns
+        -------
+        None.
+
+        """
         print("Start tweet migration to remote db.")
         df_tweets = tweet_migrate.__tweetd_local.get_tweets_for_migration()
         
