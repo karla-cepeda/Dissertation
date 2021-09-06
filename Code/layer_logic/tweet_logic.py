@@ -5,6 +5,9 @@
 @institute: Dundalk Institute of Technology
 @supervisor: Rajesh Jaswal
 
+This module is used to carry out some processes on tweets. 
+In general: cleaning, normalization, collection, labelling, and getting list of keywords.
+
 """
 import pandas as pd
 import os
@@ -16,13 +19,31 @@ from layer_data_access import tweet_data
 
 class tweet_logic(object):
     def __init__(self):
-        tweet_logic._data = tweet_data.tweet_data()
+        """
+        Constrcutor.
+        Parent class. 
+        Children class below.
+        """
+        tweet_logic._data = tweet_data.tweet_data() # To access data to from database
         
     def __del__(self):
         del tweet_logic._data
 
 class collection(tweet_logic):    
     def __init__(self, inicial_collection):  
+        """
+        Constructor.
+
+        Parameters
+        ----------
+        inicial_collection : Bool
+            DESCRIPTION. Indicates if the collection process is an inicial process or daily collector.
+
+        Returns
+        -------
+        None.
+
+        """
         super().__init__()
         
         # Date
@@ -64,7 +85,22 @@ class collection(tweet_logic):
         del collection.__tweetc
     
     @staticmethod
-    def start_process(truncate_log_file = False):        
+    def start_process(truncate_log_file = False):    
+        """
+        This method starts the collection process, depending on parameter sent to constructor, this will behave
+        as a daily collector (gathering tweets from today) or as an inicial collection (gathering tweets from a specific period).
+
+        Parameters
+        ----------
+        truncate_log_file : Bool, optional
+            DESCRIPTION. Indicates if the table log_file in local database is gonna be truncated (delete content). 
+            The default is False.
+
+        Returns
+        -------
+        None.
+
+        """
         print("Starting collection process...")
         
         # Truncate log files
@@ -113,6 +149,27 @@ class collection(tweet_logic):
         print("Process has been complited.")        
     
     def __get_tweets(batch_name, start_time, query, expansions, collect_conversetion=False):
+        """
+        Get tweets according to the query built.
+
+        Parameters
+        ----------
+        batch_name : String
+            DESCRIPTION. Name of the batch in process.
+        start_time : Datetime
+            DESCRIPTION. Start date to collect tweets.
+        query : String
+            DESCRIPTION. Query to be sent to the endpoint.
+        expansions : String
+            DESCRIPTION. Indicates data that will be added when getting the json response.
+        collect_conversetion : Bool, optional
+            DESCRIPTION. Indicates if the process will collect a conversation. The default is False.
+
+        Returns
+        -------
+        None.
+
+        """
         path = os.path.join(collection.__repository_name, batch_name)
         end_time = start_time + timedelta(days=1)    
         count_tweets = 0
@@ -152,6 +209,24 @@ class collection(tweet_logic):
             del results, filename
     
     def __get_count_tweets(data, batch_name, filename):
+        """
+        Count the number of tweets within a json response.
+
+        Parameters
+        ----------
+        data : dictionary
+            DESCRIPTION. This contains the response from the twitter api.
+        batch_name : string
+            DESCRIPTION. Name of the batch in process.
+        filename : string
+            DESCRIPTION. Name of the filename that has been used to save the response in a json file in machine.
+
+        Returns
+        -------
+        Integer
+            DESCRIPTION. Number of tweets in data
+
+        """
         if 'meta' in data.keys():
             return int(data['meta']['result_count'])
         else:
@@ -161,6 +236,20 @@ class collection(tweet_logic):
             return 0
     
     def __get_idConversations(res_json):
+        """
+        Get the conversation_id from response, this is to collect the tweets within a conversation.
+
+        Parameters
+        ----------
+        res_json : directory
+            DESCRIPTION. response from twiter api
+
+        Returns
+        -------
+        idConversations_lst : list
+            DESCRIPTION. List of all conversation ids 
+
+        """
         idConversations_lst = list()
         if "data" in res_json.keys():
             for d in res_json["data"]:
@@ -172,6 +261,27 @@ class collection(tweet_logic):
         return idConversations_lst
 
     def __save_response(path, filename, extention, res_json, total_tweets):
+        """
+        Save the response in the machine as a "raw" format.
+
+        Parameters
+        ----------
+        path : string
+            DESCRIPTION. Path were the file will be saved.
+        filename : string
+            DESCRIPTION. Name of the file
+        extention : string
+            DESCRIPTION. Type of file, this will be most of the cases .json
+        res_json : directory
+            DESCRIPTION. Respose from Twitter API.
+        total_tweets : integer
+            DESCRIPTION. Total number of tweets.
+
+        Returns
+        -------
+        None.
+
+        """
         if total_tweets > 0:
             collection.__create_repository(path)        
             with open(os.path.join(path, filename + extention), 'w') as f:
@@ -179,6 +289,10 @@ class collection(tweet_logic):
             tweet_logic._data.insert_log_files(path, filename, extention, total_tweets)
 
     def __create_repository(path):
+        """
+        Create files to save response from Twitter API
+        
+        """
         folders = ""
         for f in os.path.split(path):
             folders = os.path.join(folders, f)
@@ -187,6 +301,12 @@ class collection(tweet_logic):
 
 class preparation(tweet_logic):
     def __init__(self):   
+        """
+        Constructor.
+        Process to clean, normalize, insert tweets into local database.
+        Additionally, it insert information related to users, places and referenced tweets.
+        
+        """
         super().__init__()
         
         # Count number of tweets processed
@@ -212,6 +332,24 @@ class preparation(tweet_logic):
     # Insert tweet into database
     #  only if does not exist on db
     def __insert_tweet(tweets, key_names, batch_name):
+        """
+        Insert tweet into local database.
+        Cleaning and Normalization process are carried out before insertion process.
+
+        Parameters
+        ----------
+        tweets : dataframe
+            DESCRIPTION. Tweet. This contains cleaned and normalized columns.
+        key_names : string
+            DESCRIPTION. What section the tweet came from, as in the reponse there are tweets in the "data" section and in "tweets" section.
+        batch_name : string
+            DESCRIPTION. Name of the batch in process.
+
+        Returns
+        -------
+        None.
+
+        """
         found_keys = 0
         for k in key_names:
             if k in tweets.keys():
@@ -287,6 +425,19 @@ class preparation(tweet_logic):
     # Insert user into database
     #  only if does not exist on db
     def __insert_user(data):    
+        """
+        Insert user into database.
+
+        Parameters
+        ----------
+        data : dictioanry
+            DESCRIPTION. response from twitter api
+
+        Returns
+        -------
+        None.
+
+        """
         if 'includes' in data.keys():
             if 'users' in data['includes'].keys():
                 users = data['includes']['users']
@@ -301,6 +452,19 @@ class preparation(tweet_logic):
     # Insert place into database
     #  only if it does not exist on db
     def __insert_place(data):    
+        """
+        Insert place into database.
+
+        Parameters
+        ----------
+        data : dictioanry
+            DESCRIPTION. response from twitter api
+
+        Returns
+        -------
+        None.
+
+        """
         if 'includes' in data.keys():
             if 'places' in data['includes'].keys():
                 places = data['includes']['places']                        
@@ -311,6 +475,20 @@ class preparation(tweet_logic):
         
     @staticmethod
     def start_process(truncate_tables = True):
+        """
+        Preprocess the data and insert it into the database.
+
+        Parameters
+        ----------
+        truncate_tables : Bool, optional
+            DESCRIPTION. Indicates if it is needed to truncate tables (delete content) from local database.
+            The default is True.
+
+        Returns
+        -------
+        None.
+
+        """
         print(datetime.today(), "Starting cleaning and insertion process...")        
         # Truncate tables
         if truncate_tables:
@@ -345,6 +523,10 @@ class preparation(tweet_logic):
 
 class keywords(tweet_logic):
     def __init__(self):
+        """
+        Constructor.
+        
+        """
         super().__init__()
         # For labelling process
         keywords.__keywords_process = my_tweet.my_keywords()
@@ -355,6 +537,14 @@ class keywords(tweet_logic):
 
     @staticmethod
     def start_process():
+        """
+        Start the process to get the keywords within a tweet according to the keywords in the batches.
+
+        Returns
+        -------
+        None.
+
+        """
         print(datetime.today(), "Starting keywords process")
         df_tweets = tweet_logic._data.get_tweet_keywords()
 
@@ -378,32 +568,6 @@ class keywords(tweet_logic):
             print("No tweets have been found for upgrade.")
 
         print(datetime.today(), "Process has been completed.")
-
-class duplicated_detection(tweet_logic):
-    def __init__(self):  
-        super().__init__()
-
-    @staticmethod
-    def start_process():
-        print("Starting duplicated detection process...")
-        # Get all json files
-        df_tweets = tweet_logic._data.get_all_tweets()
-        df_tweets_no_duplicated = pd.DataFrame(columns = df_tweets.columns)
-        count_tweets = len(df_tweets)
-
-        for index in range(count_tweets):
-            row_df = df_tweets.loc[index]
-            cleaned_tweet =  row_df['cleaned_text']
-            if (df_tweets_no_duplicated['cleaned_text'] == cleaned_tweet).sum() == 0:
-                df_tweets_no_duplicated = pd.concat([df_tweets_no_duplicated, row_df.to_frame().T], ignore_index=True)
-
-        print("Start database insertion")
-        duplicated_tweets = df_tweets[~df_tweets['tweet_id'].isin(df_tweets_no_duplicated.tweet_id)]['tweet_id']
-        for tweet_id in duplicated_tweets:
-            tweet_logic._data.update_duplicated_tweet(str(tweet_id))
-            print("tweet_id", tweet_id, "has been updated...")
-                
-        print("Process has been complited.")
 
 class label_process(tweet_logic):
     def __init__(self, lexicon_based):
