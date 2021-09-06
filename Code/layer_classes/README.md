@@ -1,3 +1,5 @@
+# Class layer
+
 This layer contains all classes created and that are used for the logic and data_access layers.
 
 - **my_dataset.py**. Contains all methods needed to connect and close to database. It contains subclasses for remote and local connection.
