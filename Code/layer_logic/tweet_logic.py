@@ -571,6 +571,21 @@ class keywords(tweet_logic):
 
 class label_process(tweet_logic):
     def __init__(self, lexicon_based):
+        """
+        Constructor.
+        This starts the labelling process.
+                
+
+        Parameters
+        ----------
+        lexicon_based : Bool
+            DESCRIPTION. Define if the labelling process will be done by a lexico approach or using the model built.
+
+        Returns
+        -------
+        None.
+
+        """
         super().__init__()
 
         # For labelling process
@@ -586,10 +601,22 @@ class label_process(tweet_logic):
     
     @staticmethod
     def count_length(tweet):
+        """
+        Count the number of characters, excluding blank spaces.
+        
+        """
         return len(tweet.replace(' ', ''))
 
     @staticmethod
     def start_process(): 
+        """
+        Start the process of labelling, depending if it is lexicon approach or using the model.
+
+        Returns
+        -------
+        None.
+
+        """
         if label_process.__lexicon_based:
             print(datetime.today(), "Starting labelling process using VADER...")
         else:
@@ -627,6 +654,10 @@ class label_process(tweet_logic):
 
 class deactive_process(tweet_logic):
     def __init__(self):
+        """
+        Constructor.        
+
+        """
         super().__init__()
     
     @staticmethod
@@ -635,6 +666,15 @@ class deactive_process(tweet_logic):
 
     @staticmethod
     def start_process(): 
+        """
+        If the tweet has a length less or equal to 2, this tweet will be classified as empty and
+        deleted digitally from database.
+
+        Returns
+        -------
+        None.
+
+        """
         print(datetime.today(), "Starting deactivation of tweets process ...")
     	
         # To avoid selecting all tweets, just select the one that have not been labelled
