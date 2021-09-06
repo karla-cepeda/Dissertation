@@ -17,7 +17,7 @@ This architecture was chosen to organize well the code.
 # Explorationa and Modelling
 
 Files that are not using this architecture, but access the data through the layer data_access, are:
-- analysis_process.ipybn
-- exploration_process.ipybn
-- exploration_labelling_process.ipybn
-- modelling_process.ipybn
+- analysis_process.ipybn ==> contains code used to explore the irish tweets already labelled.
+- exploration_process.ipybn ==> contains code to create graphs and visualizations to explore irish tweets.
+- exploration_labelling_process.ipybn ==> contains code to create graphs and visualizations to explore data.
+- modelling_process.ipybn ==> contains the process done to create model.
