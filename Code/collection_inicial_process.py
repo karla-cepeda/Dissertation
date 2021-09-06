@@ -32,10 +32,5 @@ def main():
     tweetl.start_process()
     del tweetl
     
-    # Duplication detector process
-    tweetd = tweet_logic.duplicated_detection()
-    tweetd.start_process()
-    del tweetd
-    
 if __name__ == "__main__":
     main()
