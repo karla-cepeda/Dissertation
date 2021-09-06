@@ -5,13 +5,30 @@
 @institute: Dundalk Institute of Technology
 @supervisor: Rajesh Jaswal
 
+This module provides access to database that stores the tweets.
+
 """
 import datetime
 from layer_classes import my_database, my_yaml
 
 class data(object):    
     def __init__(self, db, local):
-        # Set up data base connection
+        """
+        Constructor.
+        Set up data base connection.
+        
+        Parameters
+        ----------
+        db : string
+            DESCRIPTION. Name of the database.
+        local : bool
+            DESCRIPTION. Indicates if it is local or remote database.
+
+        Returns
+        -------
+        None.
+
+        """
         self._db = my_database.myDB(db, local)
         data._date_format = lambda d: d.replace('T', ' ').replace('Z', '')   
         data._convert_date = lambda dstr: dstr.strftime("%Y-%m-%d %H:%M:%S")   
@@ -21,6 +38,7 @@ class data(object):
     
 class tweet_data(data):
     def __init__(self):
+        # Local access
         super().__init__('twitter', True)
 
         # Get name of stored procedure
@@ -150,6 +168,7 @@ class tweet_data(data):
 
 class tweet_data_remote(data):
     def __init__(self):
+        # Remote access
         super().__init__('tanniest_sentimentanalysis', False)
    
         # Get name of stored procedure

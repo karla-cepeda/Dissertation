@@ -5,13 +5,20 @@
 @institute: Dundalk Institute of Technology
 @supervisor: Rajesh Jaswal
 
+This module provides access to database that stores dates.
+
 """
 import datetime
 from layer_classes import my_database, my_yaml
 
 class data(object):
     def __init__(self, db, local):
-        # Set up data base connection
+        """
+        Constructor.
+        Class parent. Children below.
+        Set up database connection
+        
+        """
         self._db = my_database.myDB(db, local)
         data._convert_date = lambda dstr: datetime.datetime.strptime(dstr, '%d %B %Y').strftime("%Y-%m-%d")
 
