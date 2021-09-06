@@ -1,7 +1,19 @@
-The application tier, which may also be referred to as the logic tier, is written in a programming language such as Java and contains the business logic that supports the application’s core functions. The underlying application tier can either be hosted on distributed servers in the cloud or on a dedicated in-house server, depending on how much processing power the application requires.
+This folder contains all the code used for collection, cleaning and normalization of tweets. Additionally, insertion and upgrade process to database are included.
 
-Layer_data_access was designed to leave the connection to database open until the sub-process (could be preprocessing, or saving json files collected from Twitter API) ends. This is possible to change by accessing to this layer and change the code.
+To organize the code, a three-layer architecture has been used. This is a well-established software application architecture that organizes applications into three logical and physical computing tiers: 
+- **Presentation layer**. This is the user interface. In this project, for collection and preprocess it is used the console to show the process.
+- **Logic layer**.  This is were data is processed. This is were the process happens. It was designed to leave the connection to database open until the sub-process (could be preprocessing, or saving json files collected from Twitter API) ends. This is possible to change by accessing to this layer and change the code.
+- **Data access layer**. This is were data is stored and managed. 
 
-Layer_logic is where the process happens.
+Other layers:
+- **Class layer**. Includes different classes and methods.
 
-Code in extras folder is not used during the collection and preprocess of tweets and dates. This folder contains support code for other types of processes such as extraction of slang dictionary and emoticon and emoji process to create dictionaries.
+- **Extra**. This folder is not used during the collection and preprocess of tweets and dates. This folder contains support code for other types of processes such as extraction of slang dictionary and emoticon and emoji process to create dictionaries.
+
+This architecture was chosen to organize well the code.
+
+Files that are not using this architecture, but access the data through the layer data_access, are:
+- analysis_process.ipybn
+- exploration_process.ipybn
+- exploration_labelling_process.ipybn
+- modelling_process.ipybn
