@@ -1,3 +1,5 @@
+# Logic layer
+
 This layer contains all the logic to carry out different processes such as cleaning, collection, migration of the data to a remote database, and so on.
 
 - **date_logic.py**. This python scritp contains the process to scrap the website Wikipedia that contains important dates and events related to covid in Ireland.
