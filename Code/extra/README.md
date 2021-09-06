@@ -1,3 +1,5 @@
+# Extra folder
+
 This section includes code that was used as supporting scripts for the following actions:
 
 - **download_dictionaries.py**. Download Slang dictionary and emoticons/emojis dictionary for preprocess of tweets.
