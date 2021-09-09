@@ -5,10 +5,16 @@
 @institute: Dundalk Institute of Technology
 @supervisor: Rajesh Jaswal
 
+DESCRIPTION.
+    Inicial process that collects tweets from 1th of January 2020 up to today.
+    Inicial date could be modified on the yaml file layer_configuracion/mytweet.yaml
+
+    inicial_collection must be "True".
+
 """
 from layer_logic import tweet_logic
 
-def main():  
+def main():
     
     # Collection of data and save raw format
     tweetc = tweet_logic.collection(inicial_collection = True)
