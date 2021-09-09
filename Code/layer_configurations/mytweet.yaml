@@ -1,7 +1,7 @@
 # Inicial configuration for collection
 # This default values could be changed in batch section (below)
 collection_config:
-    deafult_start_date: '2021,8,6'
+    deafult_start_date: '2021,8,14'
     collect_conversations: False
     query_config: -is:nullcast
     expansions:  "referenced_tweets.id,author_id&tweet.fields=attachments,author_id,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld&user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld"
@@ -45,14 +45,14 @@ config_batches:
     from_gov_public_figures_c: ['cvaccine', 'covid', {'from:':'gov_public_figures'}, {'conversation':True}]
     to_gov_public_figures: ['vaccine', 'covid', {'to:':'gov_public_figures'}, {'extra_config': -is:retweet}]
     to_gov_public_figures_c: ['cvaccine', 'covid', {'to:':'gov_public_figures'}, {'extra_config': -is:retweet}]
-    from_gov: ['vaccine', 'covid', {'from:':'gov_departments'}, {'from:':'gov_health_departments'}, {'conversation':True}]
+    from_gov: ['vaccine', 'covid', {'from:':['gov_departments', 'gov_health_departments']}, {'conversation':True}]
     from_gov_c: ['cvaccine', 'covid', {'from:':'gov_departments'}, {'from:':'gov_health_departments'}, {'conversation':True}]
     to_gov: ['vaccine', 'covid', {'to:':'gov_departments'}, {'from:':'gov_health_departments'}, {'extra_config': -is:retweet}]
     to_gov_c: ['cvaccine', 'covid', {'to:':'gov_departments'}, {'from:':'gov_health_departments'}, {'extra_config': -is:retweet}]
-    from_health: ['vaccine', 'covid', {'from:':'health_public_figures'}, {'conversation':True}]
-    from_health_c: ['cvaccine', 'covid', {'from:':'health_public_figures'}, {'conversation':True}]
-    to_health: ['vaccine', 'covid', {'to:':'health_public_figures'}, {'extra_config': -is:retweet}]
-    to_health_c: ['cvaccine', 'covid', {'to:':'health_public_figures'}, {'extra_config': -is:retweet}]
+    #from_health: ['vaccine', 'covid', {'from:':'health_public_figures'}, {'conversation':True}]
+    #from_health_c: ['cvaccine', 'covid', {'from:':'health_public_figures'}, {'conversation':True}]
+    #to_health: ['vaccine', 'covid', {'to:':'health_public_figures'}, {'extra_config': -is:retweet}]
+    #to_health_c: ['cvaccine', 'covid', {'to:':'health_public_figures'}, {'extra_config': -is:retweet}]
     #covid_vaccine_global: ['vaccine', 'covid', {'-': 'place'}] # This batch was used just for training the SVM model
  
 repositories:
