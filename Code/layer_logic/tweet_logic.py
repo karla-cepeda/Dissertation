@@ -131,8 +131,17 @@ class collection(tweet_logic):
                     elif word == "expansions":
                         expansions = value
                     else:
-                        separator = " " + word
-                        query_txt += "(" + word + " OR ".join(separator.join(collection.__operator[value]).split()) + ") "
+                        if type(value) == list:
+                            separator = " " + word
+                            query_txt2 = ""
+                            for v in value:
+                                query_txt2 += word + " OR ".join(separator.join(collection.__operator[v]).split()) 
+                            query_txt += "(" + query_txt2 + ") "
+                            del query_txt2
+
+                        else:
+                            separator = " " + word
+                            query_txt += "(" + word + " OR ".join(separator.join(collection.__operator[value]).split()) + ") "
                 else:
                     query_txt += "(" + " OR ".join(collection.__operator[q2]) + ") "
             
