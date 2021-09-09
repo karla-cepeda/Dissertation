@@ -268,7 +268,11 @@ class my_preprocessor(object):
         # NLP global variable would be use dfor stop words and lemma convertion.
         my_preprocessor.__nlp = spacy.load('en_core_web_md')                      
         my_preprocessor.__en_dict = enchant.Dict("en_US")
-                
+        
+        myy = my_yaml.my_yaml_tweet()
+        my_preprocessor.__my_keywords = myy.get_keywords_covid_vaccine_c()
+        del myy
+
         #ABB_PIPE_ = AbbreviationDetector(NLP_)
         #NLP_.add_pipe(ABB_PIPE_)
     
