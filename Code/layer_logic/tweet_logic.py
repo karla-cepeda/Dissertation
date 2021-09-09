@@ -542,7 +542,7 @@ class keywords(tweet_logic):
     
     def __del__(self):
         super().__del__()
-        del preparation.__keywords_process
+        del keywords.__keywords_process
 
     @staticmethod
     def start_process():
