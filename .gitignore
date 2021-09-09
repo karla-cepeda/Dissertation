@@ -2,11 +2,18 @@
 
 Dataset/*
 Dashboard/layer_configurations/config.yaml
-Dashboard/__pycache__/
+Dashboard/__pycache__/*
+Dashboard/app/__pycache__/*
+Dashboard/layer_classes/__pycache__/*
+Dashboard/layer_data_access/__pycache__/*
+Dashboard/.git/*
+Dashboard/.gitignore
+Dashboard/requirements.txt
+Dashboard/Procfile
 
 Code/layer_configurations/config.yaml
 
-Code/.vscode/*
+Code/.vscode
 Code/layer_classes/__pycache__/*
 Code/layer_data_access/__pycache__/*
 Code/layer_logic/__pycache__/*
