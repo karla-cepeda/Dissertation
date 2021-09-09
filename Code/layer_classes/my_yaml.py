@@ -114,6 +114,22 @@ class my_yaml_tweet(my_yaml):
         
         return keywords
     
+    def get_keywords_covid_vaccine_c(self):
+        """
+        Return a list of keywords used on the batches.
+        
+        """
+        data = self.get_keywords()        
+        keywords = list()
+        keywords.extend(data['vaccine'])
+        keywords.extend(data['cvaccine'])
+        keywords.extend(data['covid'])
+        keywords.extend(data['place'])
+        keywords = [k.replace("#", "").replace("place:", "") for k in keywords]
+        keywords = set(keywords)
+        
+        return keywords
+    
     def get_keywords_covid_vaccine_pharma(self):
         """
         Return a list of vaccine keywords used on the batches.
