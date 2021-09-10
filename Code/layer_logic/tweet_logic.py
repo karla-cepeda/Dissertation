@@ -10,6 +10,7 @@ In general: cleaning, normalization, collection, labelling, and getting list of 
 
 """
 import pandas as pd
+import numpy as np
 import os
 import json
 from datetime import datetime, date, timedelta
@@ -209,7 +210,7 @@ class collection(tweet_logic):
             count_all = count_tweets + count_conv
             if count_all > 0:
                 total_tweets += count_all
-                print(datetime.today(), "Batch:", batch_name, "Date:", collection.__short_date_str(start_time), "-", collection.__short_date_str(end_time), "Count tweets:", count_all, "Total tweets:", total_tweets)
+                print('\r', datetime.today(), "Batch:", batch_name, "Date:", collection.__short_date_str(start_time), "-", collection.__short_date_str(end_time), "Count tweets:", count_all, "Total tweets:", total_tweets, end=' ', flush=True)
                 
             # Next day
             start_time += timedelta(days=1)
@@ -321,18 +322,22 @@ class preparation(tweet_logic):
         # Count number of tweets processed
         preparation.__total_tweets = 0
         preparation.__count_tweets = 0
-        preparation.__json_files = []
         
         # Configurations
-        myy = my_yaml.my_yaml_tweet()    
-        repositories = myy.get_repositories()
-        preparation.__repository_main = repositories['main']
-        batches = myy.get_bacthes()
-        preparation.__folder_name = batches.keys()
-        del myy, repositories, batches   
+        myy = my_yaml.my_yaml_tweet()
+        preparation.__usernames = [u.lower() for u in sum(myy.get_username_covid_vaccine().values(), [])] # return the list and change to lowercase
+
+        default_config = myy.get_default_prep_config()     
+        preparation.__is_insert_data_after = default_config["is_insert_data_after"]
+        preparation.__date_insert_data_after = datetime.strptime(default_config["date_insert_data_after"], '%Y,%m,%d').date()
+
+        del myy 
     
         # Cleaning tweeter
         preparation.__my_preprocessor = my_tweet.my_preprocessor()
+
+        # Datetime convertor
+        preparation.__convert_date = lambda dstr: datetime.strptime(dstr, "%Y-%m-%dT%H:%M:%S.%fZ")
         
     def __del__(self):
         super().__del__()
@@ -367,6 +372,13 @@ class preparation(tweet_logic):
                     
         if len(key_names) == found_keys:
             for tweet in tweets:
+
+                # Do not insert more tweets created before 2021-08-14 as this is the threshold of the 
+                #  results on the report. If needed, comment lines 373 and 374.
+                if bool(preparation.__is_insert_data_after):
+                    if preparation.__convert_date(tweet['created_at']).date() < preparation.__date_insert_data_after:
+                        continue
+                
                 # Get id of tweet
                 tweet_id = tweet['id']
                 results = tweet_logic._data.get_tweet(tweet_id)
@@ -451,12 +463,13 @@ class preparation(tweet_logic):
             if 'users' in data['includes'].keys():
                 users = data['includes']['users']
                 for user in users:
-                    name = preparation.__my_preprocessor.clean_basic(user['name'])
-                    tweet_logic._data.insert_user(user['id'],
-                                                    user['username'],
-                                                    name,
-                                                    user['verified'],
-                                                    user['created_at'])
+                    if user['username'].lower() in preparation.__usernames:
+                        name = preparation.__my_preprocessor.clean_basic(user['name'])
+                        tweet_logic._data.insert_user(user['id'],
+                                                        user['username'],
+                                                        name,
+                                                        user['verified'],
+                                                        user['created_at'])
     
     # Insert place into database
     #  only if it does not exist on db
@@ -526,7 +539,7 @@ class preparation(tweet_logic):
             # Indicate that file has been processed
             tweet_logic._data.update_log_files(int(id_), str(path), str(filename), preprocessed = 1)
             
-            print(datetime.today(), "tweets inserted:", preparation.__count_tweets, "Total:", preparation.__total_tweets, "Batch:", batch_name, filename)
+            print('\r', datetime.today(), "tweets inserted:", preparation.__count_tweets, "Total:", preparation.__total_tweets, "Batch:", batch_name, filename, end = ' ', flush=True)
             
         print("Process has been complited.")
 
@@ -688,7 +701,7 @@ class deactive_process(tweet_logic):
     	
         # To avoid selecting all tweets, just select the one that have not been labelled
         tweets = tweet_logic._data.get_unlabelled_tweets(0)
-        
+
         tweets['count_length'] = tweets['normalized_text'].apply(deactive_process.count_length)
         cond = tweets['count_length'] <= 2
         tweets_deactivate = tweets[cond].copy().reset_index(drop=True)
