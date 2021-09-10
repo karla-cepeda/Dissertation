@@ -25,6 +25,6 @@ Timecodes
 
 In case of technical problems, alternative link to screencast: https://studentdkit-my.sharepoint.com/:f:/g/personal/d00242569_student_dkit_ie/EvcotwPV29hJj4rHjofaXV4B9m_v7LEIe3GAzHGqAsdLUg?e=47AAwq.
 
-**Optional**
+**Extra video**
 Daily Collector DEMOSTRATION (No talk, just window command running the code). 
 https://web.microsoftstream.com/video/12b4f340-7adf-4168-9f1f-5293672a1a77.
