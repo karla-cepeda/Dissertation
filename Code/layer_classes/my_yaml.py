@@ -171,7 +171,14 @@ class my_yaml_tweet(my_yaml):
         
         """
         return super().get_data(self._filename, "collection_config")
+                
+    def get_default_prep_config(self):
+        """
+        Return default configuration for the collection process.
         
+        """
+        return super().get_data(self._filename, "preparation_config")
+
 class my_yaml_config(my_yaml):
     def __init__(self):
         """
