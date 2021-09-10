@@ -8,6 +8,7 @@ To organize the code, a three-layer architecture has been used. This is a well-e
 
 Other layers:
 - **Class layer**. Includes different classes and methods.
+- **Configureation layer**. Includes constant values and credentials to Twitter API and database. These last files were not included, but others that include constants.
 
 Other folders:
 - **Extra**. This folder is not used during the collection and preprocess of tweets and dates. This folder contains support code for other types of processes such as extraction of slang dictionary and emoticon and emoji process to create dictionaries.
