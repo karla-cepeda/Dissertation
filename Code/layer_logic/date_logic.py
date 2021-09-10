@@ -316,8 +316,11 @@ class date_logic(object):
             # Extract year from url
             year_index = re.search(".*\(.*-?.*_?(\d{4})\).*", h)
             year_txt = year_index.group(1)
+
+            len_list = len(date_lists)
             
-            for date in date_lists:        
+            for i, date in enumerate(date_lists): 
+                
                 if not date_logic.__is_date_pattern(date.text):
                     continue
                             
@@ -373,13 +376,13 @@ class date_logic(object):
                         else:
                             continue
                 
-                print(len(dates_list), "cumulative block(s)...")
-                
-        print("All dates have been collected.")
+                print('\r', len(dates_list), "cumulative block(s)...", end = ' ', flush=True)
+
+        print("\nAll dates have been collected.")
 
         date_logic.__start_insert_db(dates_list) 
         print("Process has been complited.")
-    
+
     @staticmethod
     def __start_insert_db(dates_list):
         """
@@ -399,17 +402,18 @@ class date_logic(object):
         print("Saving to database...")
         print("Insertion process has started...")
         
+        convert_date = lambda dstr: datetime.datetime.strptime(dstr, '%d %B %Y').date()
+
         # Access to data
-        dd = date_data.date_data()
+        dd = date_data.date_data_remote()        
+        current_dates = dd.get_dates().date.tolist()
         
         for d in dates_list:
-            # Lookup up date exists in database
-            results = dd.lookup_date(d["date"], d["description"])
-            if type(results) == pd.core.frame.DataFrame:
-                if len(results) > 0:
-                    # tweet already exists, no need to insert
+
+            if not current_dates is None:
+                if convert_date(d['date']) in current_dates:
                     continue
-                
+
             # Insert date
             references = d["references"]
             date_id = dd.insert_date(d["date"], d["description"])
