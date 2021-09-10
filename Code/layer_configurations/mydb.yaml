@@ -1,17 +1,6 @@
 
 # Stored procedures segmented by database
-stored_procedures:
-    dcovid:
-        truncate_table: clean_tables
-        insert_date: insert_date
-        insert_reference: insert_reference
-        insert_date_reference: insert_date_reference
-        get_dates_for_migration: get_date_for_migration
-        get_date_reference_for_migration: get_date_reference_for_migration
-        get_reference_for_migration: get_reference_for_migration
-        insert_migration: insert_migration
-        lookup_date: lookup_date
-        
+stored_procedures:        
     twitter:
         truncate_table: clean_tables
         insert_hashtag: insert_hashtag
@@ -47,4 +36,7 @@ stored_procedures_hostgator:
         insert_tweet_date: insert_tweet_date
         get_tweets: get_tweets
         get_dates: get_dates
-        get_date_reference: get_date_reference
+        get_date_reference: get_date_reference        
+        truncate_table: clean_tables
+        lookup_date: lookup_date
+        get_dates: get_dates
