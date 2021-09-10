@@ -182,9 +182,9 @@ class tweet_data_remote(data):
         # Dispose variables
         del myy, sp_list
 
-    def insert_tweet(self, tweet_id, created_at, label_id, label, batch_name, keywords, keywords_pharm, tweet_type):
+    def insert_tweet(self, tweet_id, created_at, label_id, label, author, conversation_id, batch_name, keywords, keywords_pharma, tweet_type, active):
         created_at_txt = data._convert_date(created_at)
-        args = (str(tweet_id), created_at_txt, int(label_id), str(label), str(batch_name), str(keywords), str(keywords_pharm), str(tweet_type))
+        args = (str(tweet_id), created_at_txt, int(label_id), str(label), str(author), str(conversation_id), str(batch_name), str(keywords), str(keywords_pharma), str(tweet_type), int(active))
         self._db.call_sp(self.__sp_insert_tweet, args)
 
     def get_tweets(self):
