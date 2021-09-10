@@ -30,6 +30,7 @@ def job():
     del tweetk
     
     # Deactive tweets with length less or equal to 2
+    # This has to be executed first so tweets no labelled are processed.
     tweetda = tweet_logic.deactive_process()
     tweetda.start_process()
     del tweetda
@@ -48,10 +49,6 @@ def job():
     tweet_migration = migration_logic.tweet_migrate()
     tweet_migration.start_process()
     del tweet_migration
-
-    date_migration = migration_logic.date_migrate()
-    date_migration.start_process()
-    del date_migration
 
     print(datetime.today(), "Daily process completed.")
 
