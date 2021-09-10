@@ -15,9 +15,47 @@ Other folders:
 This architecture was chosen to organize well the code.
 
 # Explorationa and Modelling
-
 Files that are not using this architecture, but access the data through the layer data_access, are:
 - analysis_process.ipybn ==> contains code used to explore the irish tweets already labelled.
 - exploration_process.ipybn ==> contains code to create graphs and visualizations to explore irish tweets.
 - exploration_labelling_process.ipybn ==> contains code to create graphs and visualizations to explore data.
 - modelling_process.ipybn ==> contains the process done to create model.
+
+# How to use this code
+* No credentials from databases and Twitter API provided. Too get access to Twitter API, you must apply to get access in https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api *
+- Download the folder to the machine. 
+- Verify that all required libraries are installed into the machine, listing below.
+- Run scrips to create database, see below.
+
+## Requirements
+Libraries:
+- pandas
+- mysql
+- yaml
+- re
+- datetime
+- sys
+- requests
+- urllib
+- time
+- joblib
+- string
+- spacy
+- preprocessor
+- ekphrasis
+- nltk
+- bs4
+- html
+- text_to_num
+- enchant
+- json
+- os
+- sklearn
+- plotly
+- matplotlib
+- seaborn
+
+## Database
+Set up database running sql scripts located in https://github.com/karla-cepeda/Dissertation/tree/main/SQL/local.
+- **twitter.sql** contains the structure of the database.
+- **stored_procedures.sql* contains the sp used for the dashborad and for daily collection of dates.
