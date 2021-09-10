@@ -5,13 +5,30 @@
 @institute: Dundalk Institute of Technology
 @supervisor: Rajesh Jaswal
 
+This module provides access to database that stores the tweets.
+
 """
 import datetime
 from layer_classes import my_database, my_yaml
 
 class data(object):    
     def __init__(self, db, local):
-        # Set up data base connection
+        """
+        Constructor.
+        Set up data base connection.
+        
+        Parameters
+        ----------
+        db : string
+            DESCRIPTION. Name of the database.
+        local : bool
+            DESCRIPTION. Indicates if it is local or remote database.
+
+        Returns
+        -------
+        None.
+
+        """
         self._db = my_database.myDB(db, local)
         data._date_format = lambda d: d.replace('T', ' ').replace('Z', '')   
         data._convert_date = lambda dstr: dstr.strftime("%Y-%m-%d %H:%M:%S")   
@@ -21,6 +38,7 @@ class data(object):
     
 class tweet_data(data):
     def __init__(self):
+        # Local access
         super().__init__('twitter', True)
 
         # Get name of stored procedure
@@ -150,6 +168,7 @@ class tweet_data(data):
 
 class tweet_data_remote(data):
     def __init__(self):
+        # Remote access
         super().__init__('tanniest_sentimentanalysis', False)
    
         # Get name of stored procedure
@@ -163,9 +182,9 @@ class tweet_data_remote(data):
         # Dispose variables
         del myy, sp_list
 
-    def insert_tweet(self, tweet_id, created_at, label_id, label, batch_name, keywords, keywords_pharm, tweet_type):
+    def insert_tweet(self, tweet_id, created_at, label_id, label, author, conversation_id, batch_name, keywords, keywords_pharma, tweet_type, active):
         created_at_txt = data._convert_date(created_at)
-        args = (str(tweet_id), created_at_txt, int(label_id), str(label), str(batch_name), str(keywords), str(keywords_pharm), str(tweet_type))
+        args = (str(tweet_id), created_at_txt, int(label_id), str(label), str(author), str(conversation_id), str(batch_name), str(keywords), str(keywords_pharma), str(tweet_type), int(active))
         self._db.call_sp(self.__sp_insert_tweet, args)
 
     def get_tweets(self):
@@ -176,7 +195,7 @@ class tweet_data_remote(data):
     def get_dates(self):
         self._db.call_sp(self.__sp_get_dates)
         results = self._db.get_results_dataframe()        
-        return results        
+        return results   
     
     def get_date_reference(self):
         self._db.call_sp(self.__sp_get_date_reference)

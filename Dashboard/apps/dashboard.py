@@ -22,6 +22,7 @@ import re
 from app import app
 
 from layer_data_access import tweet_data, date_data
+from layer_classes import my_yaml
 
 # Global values
 #colors = ['#636EFA','#EF553B','#00CC96', '#AB63FA', '#FFA15A', '#1c1cbd']
@@ -222,7 +223,24 @@ def max_sentiment(tweets_df, cond):
     global_sent = df.sum()
         
     return max_sent, global_sent
-        
+
+
+# Configurations
+myy = my_yaml.my_yaml_tweet()
+default_config = myy.get_default_prep_config()   
+is_insert_data_after = default_config["is_insert_data_after"]
+date_insert_data_after = datetime.datetime.strptime(default_config["date_insert_data_after"], '%Y,%m,%d').date()
+del myy, default_config
+
+setdates_style = {"display":"none"}
+message_tooltip = "Welcome to the dashboard!\nThis is the data collected for the final project{} of the MSc in DA. {}data is collected everyday at 23:50."
+
+if bool(is_insert_data_after):
+    setdates_style = {'display':'inicial'}
+    message_tooltip = message_tooltip.format(" from 1 January 2020 to 13 August 2021", 'After the inicial collection, ')
+else:
+    message_tooltip = message_tooltip.format("", 'The ')
+
 layout = html.Div(children=[   
                 
                 dcc.ConfirmDialog(
@@ -237,17 +255,15 @@ layout = html.Div(children=[
                                                    ),]
                              ),
                         
-                        dbc.Tooltip(children=["Welcome to the dashboard!"
-                                              " This is just a summary about location and status of bikes."
-                                              " For details, access to Map, Bikes and Rentals section."],
-                                    target="openid",
-                                    style={'font-size':'12px'}
-                                    ),
+                        dbc.Tooltip(children=[message_tooltip],
+                        target="openid",
+                        style={'font-size':'12px'}
+                        ),
                         
                         dbc.Col(children=[html.H1("Dashboard", 
                                                   style={'textAlign': 'center', 'color': 'black', 'margin-bottom': '0px'}, 
                                                   className='display-4'),
-                                          html.H4("COVID-19 vaccine sentiment in Ireland", 
+                                          html.H4("Sentiment Analysis on COVID-19 vaccines in Ireland", 
                                                   style={'textAlign': 'center', 'color':'gray', 'margin-top': '0px', 'font-size':'20px'}, 
                                                   className='display-4')], 
                                 className="col-sm-12", md=3
@@ -264,7 +280,7 @@ layout = html.Div(children=[
                             
                         ], justify="center"),
                 
-                dbc.Row(dbc.Col([dcc.Graph(id='loctblid',)], style={'padding-bottom':'20px'}), className="col")
+                dbc.Row(dbc.Col(id='loctblid', style={'padding-bottom':'20px'}), className="col")
 
 ])
 
@@ -322,6 +338,7 @@ daterange = html.Div([
                         style={'display':'inline', 'font-size':'12px'}
                     ),
                     html.Button('Reset dates', id='resetdates', n_clicks=0),
+                    html.Button('Set dates as in Report', id='setdates', n_clicks=0, style=setdates_style),
     ])
 
 batch_names3 = html.Div([
@@ -364,7 +381,6 @@ basis3 = html.Div([
 
 filters = html.Div(['Filters', daterange, basis3, batch_names3, vaccines_name1, html.Button('Clean filters', id='cleanfilters', n_clicks=0),])
 
-
 @app.callback(
     [Output(component_id='summ', component_property='children'),
      Output(component_id='overtimeline', component_property='figure'),
@@ -376,8 +392,9 @@ filters = html.Div(['Filters', daterange, basis3, batch_names3, vaccines_name1, 
      Output('perioddate', 'end_date'),
      Output('batchnames', 'value'),
      Output('vaccinenames', 'value'),
-     Output('loctblid', 'figure'),
+     Output('loctblid', 'children'),
      Output('basisid', 'value'),
+     Output('setdates', 'n_clicks'),
      
      ],
     
@@ -388,19 +405,25 @@ filters = html.Div(['Filters', daterange, basis3, batch_names3, vaccines_name1, 
      Input(component_id='resetdates', component_property='n_clicks'),
      Input(component_id='cleanfilters', component_property='n_clicks'),
      Input(component_id='basisid', component_property='value'),
+     Input(component_id='setdates', component_property='n_clicks'),
      
      ]
     
 )
-def update_graphs(start_date, end_date, options, vaccines, n_clicks, cleanfilters, basis):    
+def update_graphs(start_date, end_date, options, vaccines, n_clicks, cleanfilters, basis, n_clicks2):    
     
     global tweets_df, date_df
     global lst_name
     global min_date, max_date
+    global date_insert_data_after
     
     if int(n_clicks) > 0:
         start_date = pd.to_datetime(min_date).date()
         end_date = pd.to_datetime(max_date).date()
+    
+    elif int(n_clicks2) > 0:
+        start_date = pd.to_datetime(start_date).date()
+        end_date = date_insert_data_after - timedelta(days=1)
         
     elif int(cleanfilters) > 0:
         start_date = pd.to_datetime(min_date).date()
@@ -510,6 +533,7 @@ def update_graphs(start_date, end_date, options, vaccines, n_clicks, cleanfilter
             
     ]
     
+    #if basis == "0":
     cond = (date_df.created_at <= end_date) & (date_df.created_at >= start_date)
     date_df2 = date_df[cond].sort_values('created_at', ascending=False).copy()
     figtblbat = go.Figure(data=[go.Table(
@@ -536,5 +560,8 @@ def update_graphs(start_date, end_date, options, vaccines, n_clicks, cleanfilter
         ),
         paper_bgcolor="White",
     )
+    figtbl = dcc.Graph(figure=figtblbat)
+    #else:
+    #    figtbl = [{}]
     
-    return [summ, fig, False, "", 0, 0, start_date, end_date, options, vaccines, figtblbat, basis]
+    return [summ, fig, False, "", 0, 0, start_date, end_date, options, vaccines, figtbl, basis, 0]

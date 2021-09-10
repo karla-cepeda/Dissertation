@@ -1,5 +1,32 @@
 
 # Stored procedures segmented by database
+stored_procedures:        
+    twitter:
+        truncate_table: clean_tables
+        insert_hashtag: insert_hashtag
+        insert_place: insert_place
+        insert_referenced_tweet: insert_referenced_tweet
+        insert_tweet: insert_tweet
+        insert_user: insert_user
+        lookup_tweet: lookup_tweet
+        lookup_conversation_id: lookup_conversation_id
+        insert_log_file: insert_log_file
+        update_log_file: update_log_file
+        get_log_file: get_log_file
+        truncate_log_file: truncate_log_file
+        get_all_tweets: get_all_tweets
+        update_tweets_active: update_tweets_active
+        insert_polarity: insert_tweet_polarity_score
+        update_duplicated_tweet: update_duplicated_tweet
+        lookup_sentiment_tweet: lookup_sentiment_tweet
+        truncate_log_file_label: truncate_log_file_label
+        get_tweets_train_test: get_tweets_train_test
+        get_unlabelled_tweets: get_unlabelled_tweets
+        get_tweets_for_migration: get_tweets_for_migration
+        insert_migration: insert_migration
+        get_tweet_keywords: get_tweet_keywords
+        insert_keywords: insert_keywords
+
 stored_procedures_hostgator:
     sentimentanalysis:
         insert_date: insert_date
@@ -9,4 +36,7 @@ stored_procedures_hostgator:
         insert_tweet_date: insert_tweet_date
         get_tweets: get_tweets
         get_dates: get_dates
-        get_date_reference: get_date_reference
+        get_date_reference: get_date_reference        
+        truncate_table: clean_tables
+        lookup_date: lookup_date
+        get_dates: get_dates
