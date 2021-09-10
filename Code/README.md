@@ -22,7 +22,7 @@ Files that are not using this architecture, but access the data through the laye
 - modelling_process.ipybn ==> contains the process done to create model.
 
 # How to use this code
-* No credentials from databases and Twitter API provided. Too get access to Twitter API, you must apply to get access in https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api *
+*No credentials from databases and Twitter API provided. Too get access to Twitter API, you must apply to get access in https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api*
 - Download the folder to the machine. 
 - Verify that all required libraries are installed into the machine, listing below.
 - Run scrips to create database, see below.
