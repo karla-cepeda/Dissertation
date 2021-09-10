@@ -27,7 +27,7 @@ CREATE TABLE `hashtag` (
   `name` varchar(280) NOT NULL,
   `cleaned` varchar(560) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25052 DEFAULT CHARSET=utf8 COMMENT='Catalog the hashtags.';
+) ENGINE=InnoDB AUTO_INCREMENT=25340 DEFAULT CHARSET=utf8 COMMENT='Catalog the hashtags.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `log_file` (
   `preprocessed` tinyint(4) NOT NULL DEFAULT '0',
   `preprocessed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10788 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11322 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,4 +164,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-06 20:14:41
+-- Dump completed on 2021-09-10 12:29:37
