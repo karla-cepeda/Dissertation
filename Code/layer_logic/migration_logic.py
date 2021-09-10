@@ -9,7 +9,7 @@ Contains the process to migrate specific tweet data into a remote database that 
 be used for a dashboard to show off the results.
 
 """
-from layer_data_access import tweet_data, date_data
+from layer_data_access import tweet_data
 
 class tweet_migrate(object):
     def __init__(self):
@@ -36,14 +36,15 @@ class tweet_migrate(object):
         
         if not df_tweets is None:
             # Copy all data from dates that havent been copied to remote db
-            for i in range(len(df_tweets)):       
-                tweet_migrate.__tweetd_remote.insert_tweet(**{c: df_tweets.loc[i,c] for c in df_tweets.columns})
-            
+            for v in df_tweets.to_dict(orient='records'):                       
+                tweet_migrate.__tweetd_remote.insert_tweet(**v)
+                print('\r', "tweet", v['tweet_id'], "has been inserted into remote db", end = ' ', flush=True)
+
             # Register ids inserted in database
             ids = df_tweets.tweet_id
             for i in ids:
                 tweet_migrate.__tweetd_local.insert_migration(str(i))
-                print("tweet", i, "has been inserted into remote db")
+                print("\r", "tweet", i, "has been inserted into remote db", end = ' ', flush=True)
 
         else:
             print("No tweets to migrate.")
