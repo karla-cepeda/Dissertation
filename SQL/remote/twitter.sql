@@ -1,5 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
+-- Host: localhost    Database: twitter
 -- ------------------------------------------------------
 -- Server version	5.7.23-23
 
@@ -27,7 +28,7 @@ CREATE TABLE `date` (
   `description` varchar(2000) NOT NULL,
   `from_ireland` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=661 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=412 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,19 +46,6 @@ CREATE TABLE `date_reference` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `deleated`
---
-
-DROP TABLE IF EXISTS `deleated`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `deleated` (
-  `tweet_id` varchar(45) CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`tweet_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `reference`
 --
 
@@ -71,7 +59,7 @@ CREATE TABLE `reference` (
   `url` varchar(2100) NOT NULL,
   `retrieved_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1164 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=736 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,4 +108,4 @@ CREATE TABLE `tweet_date` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-06 21:20:32
+-- Dump completed on 2021-09-10 12:38:28
